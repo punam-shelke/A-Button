@@ -296,7 +296,7 @@ let drawAnimationFrame = function () {
     player.speed_y *= 0.9;
     //drawing tiles to the canvas from tiles array
     for (let index = 0; index < Drawing.tiles.length; index++) {
-        frame_context.fillStyle = (Drawing.tiles[index] == 1) ? `#ffffff` : `#000000`;//setting color of tile
+        frame_context.fillStyle = (Drawing.tiles[index] == 1) ? `#000000` : `#ffffff`;//setting color of tile
         frame_context.fillRect((index % Drawing.cols) * Drawing.size_of_tile, Math.floor(index / Drawing.cols) * Drawing.size_of_tile, Drawing.size_of_tile, Drawing.size_of_tile);
     }
     //frame_context.fillStyle = `#008000`;

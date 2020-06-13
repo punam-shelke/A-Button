@@ -181,6 +181,7 @@ let drawAnimationFrame = function () {
       }*/
 
     //resolve collision with spider
+
     resolveSpiderLeftCollision();
     resolveSpiderRightCollision();
     /*

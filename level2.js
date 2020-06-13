@@ -45,7 +45,13 @@ let player = {
 // create player image
 player.image = new Image();
 console.log(player.image);
-
+let hint = {
+    x_cordinate: 0,
+    y_cordinate: 195,
+    image: new Image(),
+    width: 322,
+    height: 105
+}
 //handles status updation of different keys
 let keyBoardListener = {
     left_key_status: false,
@@ -333,6 +339,7 @@ let drawAnimationFrame = function () {
     frame_context.arc(sun.x_cordinate, sun.y_cordinate, sun.radius, 0, Math.PI * 2);
     frame_context.fill();
     frame_context.drawImage(player.image, 0, 0, 16, 16, Math.floor(player.x_cordinate), Math.floor(player.y_cordinate), 40, 40);
+    frame_context.drawImage(hint.image, 0, 0, image.width, image.height, Math.floor(hint.x_cordinate), Math.floor(hint.y_cordinate), hint.width, hint.height);
     window.requestAnimationFrame(drawAnimationFrame);
 }
 //window.requestAnimationFrame(drawAnimationFrame);
@@ -340,10 +347,13 @@ window.addEventListener(`keydown`, keyBoardListener.updateKeyStatus);
 window.addEventListener(`keyup`, keyBoardListener.updateKeyStatus);
 window.addEventListener(`mousedown`, sun.mouseListener)
 player.image.addEventListener(`load`, function (event) {
-    console.log(`onload fired`)
+});
+player.image.addEventListener(`load`, function (event) {
     window.requestAnimationFrame(drawAnimationFrame);
 });
+
 player.image.src = `./animation.png`;
+hint.image.src = `./hint.png`;
 
 //function for assigning different collision technique
 function resolveCollision(tile_value, row, column) {
