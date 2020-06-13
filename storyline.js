@@ -82,7 +82,7 @@ let drawAnimationFrame = function () {
         alert(`You Stepped on wrong tile!!YOU MUST SAVE YOUR FRIEND`);
         let identifier = { id: "0" };
         window.history.replaceState(identifier,
-            "animationcreation", "/A-Button/animationcreation.html");
+            "/A-Button/animationcreation", "/A-Button/animationcreation.html");
         window.location.reload();
         return;
     }
