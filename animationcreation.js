@@ -165,7 +165,7 @@ let drawAnimationFrame = function () {
     else if (player.x_cordinate > frame_context.canvas.width) {
         let identifier = { id: "1" };
         window.history.replaceState(identifier,
-            "level2", "/level2.html");
+            "level2", "/A-Button/level2.html");
         window.location.reload();
         return;
     }
