@@ -1,0 +1,14 @@
+/*Resetting CSS*/
+*{
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+body{
+    height: 100vh;
+    background-color : #c9c9c9;
+    display: grid;
+    justify-items: center;
+    align-items: center;
+}
