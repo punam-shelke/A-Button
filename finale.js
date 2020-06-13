@@ -87,7 +87,7 @@ let Drawing = {
         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0,
         2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -221,14 +221,15 @@ let drawAnimationFrame = function () {
       2.check collision for 2 corner points
       3.identify tile of collision and resolve accordingly
       */
-
+    //resolve collision with spider
+    resolveSpiderLeftCollision(x_position, y_position);
     //variables required to detect and resolve collision
     let x_position, y_position, column_value, row_value, tile_value;
     if (player.x_cordinate > player.old_x_cordinate) {//if player is moving right
         //check for top right corner
         x_position = player.x_cordinate + player.width;//finding x-coordinate of the corner
         y_position = player.y_cordinate; //finding y-coordinate of corner
-        resolveSpiderLeftCollision(x_position, y_position);
+
         //mapping players corner values to the tile  grid
         column_value = Math.floor(x_position / Drawing.size_of_tile);
         row_value = Math.floor(y_position / Drawing.size_of_tile);
@@ -378,22 +379,20 @@ function resolveCollision(tile_value, row, column) {
 }
 //resolving collision with spider
 function resolveSpiderLeftCollision(x_position, y_position) {
-    if (player.x_cordinate > player.old_x_cordinate) {//player is moving right
-        //check if player and spider is in same row
-        if (y_position <= spider.y_cordinate) {
-            //check if their sides are colliding or not
-            if (x_position >= spider.x_cordinate && player.old_x_cordinate + player.width < spider.x_cordinate) {
-                player.x_cordinate = 0;
-                player.y_cordinate = 0;
-                player.old_x_cordinate = 0;
-                player.old_y_cordinate = 0;
-                player.speed_x = 0;
-                player.speed_y = 0;
-                spider.speed_x = 0;
-                spider.x_cordinate = frame_context.canvas.width * 0.5;
-                keyBoardListener.left_key_status = keyBoardListener.right_key_status = keyBoardListener.up_key_status = false;
-                alert(`Save yourself !! and press the button`);
-            }
+    //check if player and spider is in same row
+    if (y_position >= spider.y_cordinate) {
+        //check if their sides are colliding or not
+        if (x_position >= spider.x_cordinate && player.old_x_cordinate + player.width < spider.x_cordinate) {
+            player.x_cordinate = 0;
+            player.y_cordinate = 0;
+            player.old_x_cordinate = 0;
+            player.old_y_cordinate = 0;
+            player.speed_x = 0;
+            player.speed_y = 0;
+            spider.speed_x = 0;
+            spider.x_cordinate = frame_context.canvas.width * 0.5;
+            keyBoardListener.left_key_status = keyBoardListener.right_key_status = keyBoardListener.up_key_status = false;
+            alert(`Save yourself !! and press the button`);
         }
     }
     return;
