@@ -214,7 +214,7 @@ let drawAnimationFrame = function () {
     else if (player.x_cordinate > frame_context.canvas.width) {
         let identifier = { id: "4" };
         window.history.replaceState(identifier,
-            "end", "/end.html");
+            "end", "/A-Button/end.html");
         window.location.reload();
         return;
     }
