@@ -339,7 +339,7 @@ let drawAnimationFrame = function () {
     frame_context.arc(sun.x_cordinate, sun.y_cordinate, sun.radius, 0, Math.PI * 2);
     frame_context.fill();
     frame_context.drawImage(player.image, 0, 0, 16, 16, Math.floor(player.x_cordinate), Math.floor(player.y_cordinate), 40, 40);
-    frame_context.drawImage(hint.image, 0, 0, image.width, image.height, Math.floor(hint.x_cordinate), Math.floor(hint.y_cordinate), hint.width, hint.height);
+    frame_context.drawImage(hint.image, 0, 0, hint.width, hint.height, Math.floor(hint.x_cordinate), Math.floor(hint.y_cordinate), hint.width, hint.height);
     window.requestAnimationFrame(drawAnimationFrame);
 }
 //window.requestAnimationFrame(drawAnimationFrame);
