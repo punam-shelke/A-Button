@@ -111,18 +111,11 @@ let drawAnimationFrame = function () {
     7.add friction to speed.;)
     */
     //if player reached button
-    let count = 0;
-    if (player.x_cordinate >= 840) {
-        count++;
-        spider.y_cordinate = -100;
-        for (let i = 75; i < 88; i++) {
-            Drawing.tiles[i] = 0;
-            Drawing.tiles_for_collision_resolution[i] = 0;
-        }
-        if (count >= 3) {
-            alert(`congo!! you beat the spider`);
-            return;
-        }
+
+    if (player.x_cordinate >= 780 + 20) {
+        spider.speed_y += 0.5;
+        alert(`congo!! you beat the spider`);
+        return;
 
     }
     //moving spider towards player
