@@ -1,5 +1,5 @@
 /**
- * get the canvas by it's ID
+ * get the canvas by using queryselector
  */
 let frame_context = (document.querySelector(`canvas`)).getContext(`2d`);
 
@@ -36,7 +36,6 @@ let player = {
 };
 // create player image
 player.image = new Image();
-console.log(player.image);
 
 //handles status updation of different keys
 let keyBoardListener = {
@@ -73,7 +72,7 @@ let Drawing = {
         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0,//195,60
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0,
         1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -113,10 +112,14 @@ let drawAnimationFrame = function () {
     */
     //if player reached button
     let count = 0;
-    if (player.x_cordinate > 840) {
+    if (player.x_cordinate >= 840) {
         count++;
         spider.y_cordinate = -100;
-        if (count >= 10) {
+        for (let i = 75; i < 88; i++) {
+            Drawing.tiles[i] = 0;
+            Drawing.tiles_for_collision_resolution[i] = 0;
+        }
+        if (count >= 3) {
             alert(`congo!! you beat the spider`);
             return;
         }
@@ -152,9 +155,10 @@ let drawAnimationFrame = function () {
     player.old_x_cordinate = player.x_cordinate;
     player.old_y_cordinate = player.y_cordinate;
 
-    //update new position
+    //update new position for player
     player.x_cordinate += player.speed_x;
     player.y_cordinate += player.speed_y;
+    //update new position for spider
     spider.x_cordinate += spider.speed_x;
     spider.y_cordinate += spider.speed_y;
     //collision detection with floor
@@ -175,7 +179,7 @@ let drawAnimationFrame = function () {
         player.x_cordinate = player.old_x_cordinate = 0;
     }
     //collision detection with right wall
-    /*  else if (player.x_cordinate > frame_context.canvas.width) {
+    /*else if (player.x_cordinate > frame_context.canvas.width) {
           let identifier = { id: "1" };
           window.history.replaceState(identifier,
               "level2", "/level2.html");
@@ -183,46 +187,16 @@ let drawAnimationFrame = function () {
           return;
       }*/
 
-    //checking collision with spider from left
-
-    /*  if (player.x_cordinate + player.width - 10 >= spider.x_cordinate + 10 && player.old_x_cordinate + player.width - 10 < spider.x_cordinate + 10) {
-          player.x_cordinate = 0;
-          player.y_cordinate = 0;
-          player.old_x_cordinate = 0;
-          player.old_y_cordinate = 0;
-          player.speed_x = 0;
-          player.speed_y = 0;
-          spider.speed_x = 0;
-          spider.x_cordinate = frame_context.canvas.width * 0.5;
-          keyBoardListener.left_key_status = keyBoardListener.right_key_status = keyBoardListener.up_key_status = false;
-          alert(`Save yourself !! and press the button`);
-  
-  
-      }*/
-    //checking collision with spider from right
-    /*  if (player.x_cordinate + 10 <= spider.x_cordinate + spider.width - 10 && player.old_x_cordinate > spider.x_cordinate + spider.width) {
-          player.x_cordinate = 0;
-          player.y_cordinate = 0;
-          player.old_x_cordinate = 0;
-          player.old_y_cordinate = 0;
-          player.speed_x = 0;
-          player.speed_y = 0;
-          spider.speed_x = 0;
-          spider.x_cordinate = frame_context.canvas.width * 0.5;
-          keyBoardListener.left_key_status = keyBoardListener.right_key_status = keyBoardListener.up_key_status = false;
-          alert(`Save yourself !! and press the button`);
-  
-  
-      }
-  
-      /*
-      Checking collision and resolving with the different tiles
-      1.check the direction of player
-      2.check collision for 2 corner points
-      3.identify tile of collision and resolve accordingly
-      */
     //resolve collision with spider
     resolveSpiderLeftCollision();
+    resolveSpiderRightCollision();
+    /*
+        Checking collision and resolving with the different tiles
+        1.check the direction of player
+        2.check collision for 2 corner points
+        3.identify tile of collision and resolve accordingly
+        */
+
     //variables required to detect and resolve collision
     let x_position, y_position, column_value, row_value, tile_value;
     if (player.x_cordinate > player.old_x_cordinate) {//if player is moving right
@@ -340,6 +314,7 @@ let drawAnimationFrame = function () {
     //adding friction to gradually slow player down
     player.speed_x *= 0.9;
     player.speed_y *= 0.9;
+    //adding friction to spider
     spider.speed_x *= 0.9;
     //drawing tiles to the canvas from tiles array
     for (let index = 0; index < Drawing.tiles.length; index++) {
@@ -357,11 +332,11 @@ window.addEventListener(`keydown`, keyBoardListener.updateKeyStatus);
 window.addEventListener(`keyup`, keyBoardListener.updateKeyStatus);
 
 player.image.addEventListener(`load`, function (event) {
-    console.log(`onload fired`)
     window.requestAnimationFrame(drawAnimationFrame);
 });
 player.image.src = `./animation.png`;
 spider.image.src = `./spider.png`;
+
 //function for assigning different collision technique
 function resolveCollision(tile_value, row, column) {
     switch (tile_value) {//distributing collision according to tile - type
@@ -377,6 +352,7 @@ function resolveCollision(tile_value, row, column) {
     }
 
 }
+
 //resolving collision with spider on left
 function resolveSpiderLeftCollision() {
     //if players x -coordinate collides while not jumping
@@ -395,8 +371,9 @@ function resolveSpiderLeftCollision() {
 
     return;
 }
+
 //resolving collision with spider on right
-function resolveSpiderLeftCollision() {
+function resolveSpiderRightCollision() {
     //if players x -coordinate collides while not jumping
     if (!player.in_air && player.x_cordinate > spider.x_cordinate && player.x_cordinate < spider.x_cordinate + spider.width) {
         player.x_cordinate = 0;
@@ -414,7 +391,6 @@ function resolveSpiderLeftCollision() {
     return;
 }
 
-
 //Resolving top collision of tile
 function resolveTopCollision(row, column) {//row and column tile is in grid
     if (player.y_cordinate > player.old_y_cordinate) {//for top-collision player should be moving down
@@ -429,7 +405,7 @@ function resolveTopCollision(row, column) {//row and column tile is in grid
     }
     return false;
 }
-
+//Resolving bottom Collision of tile
 function resolveBottomCollision(row, column) {
     if (player.y_cordinate < player.old_y_cordinate) { //player should be moving up
         let y_value_of_tile_bottom = (row + 1) * Drawing.size_of_tile;
@@ -443,6 +419,7 @@ function resolveBottomCollision(row, column) {
     }
     return false;
 }
+//resolving right collision to tile
 function resolveRightCollision(row, column) {
     if (player.x_cordinate < player.old_x_cordinate) {//for right collision to the tile player should move from left
         let x_value_of_tile_right = (column + 1) * Drawing.size_of_tile;
@@ -456,6 +433,7 @@ function resolveRightCollision(row, column) {
     }
     return false;
 }
+//resolving left collision to tile
 function resolveLeftCollision(row, column) {//to collide at left with tile ,player should be moving right
     if (player.x_cordinate > player.old_x_cordinate) {
         let x_value_of_tile_left = (column) * Drawing.size_of_tile;
