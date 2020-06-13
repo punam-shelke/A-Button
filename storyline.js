@@ -11,6 +11,19 @@ frame_context.canvas.height = 600;
 frame_context.fillStyle = `#080000`;
 frame_context.fillRect(0, 0, 900, 600);
 
+//let's animate our player
+let player_animator = {
+    standing_frame1: 0,
+    standing_frame2: 16,
+    left_frame1: 64,
+    left_frame2: 80,
+    right_frame1: 32,
+    right_frame2: 48,
+    current_frame: 0,
+    frame_to_draw: 0,
+    time_gap: 15,
+    count: 0
+}
 
 //set players height ,width , new and old x / y cordinate , speeds 
 let player = {
@@ -78,6 +91,12 @@ let Drawing = {
 
 //My main function responsible for animation
 let drawAnimationFrame = function () {
+    player_animator.count++;
+    if (player_animator.count >= player_animator.time_gap) {
+        player_animator.count = 0;
+        player_animator.frame_to_draw = player_animator.current_frame;
+    }
+
     if (friend.y > frame_context.canvas.height) {
         alert(`You Stepped on wrong tile!!YOU MUST SAVE YOUR FRIEND`);
         let identifier = { id: "0" };
@@ -98,9 +117,11 @@ let drawAnimationFrame = function () {
     if (keyBoardListener.right_key_status) {
         //adding speed gradually on right side
         player.speed_x += 0.5;
+        player_animator.current_frame = (player_animator.current_frame == player_animator.right_frame1) ? player_animator.right_frame2 : player_animator.right_frame1;
     }
     if (keyBoardListener.left_key_status) {
         //adding speed gradually on left side
+        player_animator.current_frame = (player_animator.current_frame == player_animator.left_frame1) ? player_animator.left_frame2 : player_animator.left_frame1;
         player.speed_x -= 0.5;
     }
     if (keyBoardListener.up_key_status && !player.in_air) {
@@ -109,7 +130,10 @@ let drawAnimationFrame = function () {
         //setting jump height
         player.speed_y = -35;
     }
-
+    //if none of the left and right is pressed make him stand still
+    if (!keyBoardListener.left_key_status && !keyBoardListener.right_key_status) {
+        player_animator.current_frame = (player_animator.current_frame == player_animator.standing_frame1) ? player_animator.standing_frame2 : player_animator.standing_frame1;
+    }
     player.speed_y += 1;//pseudo gravity
 
     //save old position for collision detection
@@ -156,7 +180,7 @@ let drawAnimationFrame = function () {
     }
     //frame_context.fillStyle = `#008000`;
     //frame_context.fillRect(player.x_cordinate, player.y_cordinate, player.width, player.height);
-    frame_context.drawImage(player.image, 0, 0, 16, 16, Math.floor(player.x_cordinate), Math.floor(player.y_cordinate), 40, 40);
+    frame_context.drawImage(player.image, player_animator.frame_to_draw, 0, 16, 16, Math.floor(player.x_cordinate), Math.floor(player.y_cordinate), 40, 40);
     frame_context.drawImage(friend.image, 0, 0, 86, 95, Math.floor(friend.x), Math.floor(friend.y), 86, 95);
     window.requestAnimationFrame(drawAnimationFrame);
 }

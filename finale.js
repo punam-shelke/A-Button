@@ -11,6 +11,19 @@ frame_context.canvas.height = 600;
 frame_context.fillStyle = `#000000`;
 frame_context.fillRect(0, 0, 900, 600);
 
+//let's animate our player
+let player_animator = {
+    standing_frame1: 0,
+    standing_frame2: 16,
+    left_frame1: 64,
+    left_frame2: 80,
+    right_frame1: 32,
+    right_frame2: 48,
+    current_frame: 0,
+    frame_to_draw: 0,
+    time_gap: 15,
+    count: 0
+}
 
 //spider defination
 let spider = {
@@ -97,9 +110,15 @@ let Drawing = {
     //tile size
     size_of_tile: 60, cols: 15, rows: 10
 }
-
+//value of button for finale
+let button_pressed = false;
 //My main function responsible for animation
 let drawAnimationFrame = function () {
+    player_animator.count++;
+    if (player_animator.count >= player_animator.time_gap) {
+        player_animator.count = 0;
+        player_animator.frame_to_draw = player_animator.current_frame;
+    }
 
     /*
     1.Check for event listener
@@ -112,11 +131,12 @@ let drawAnimationFrame = function () {
     */
     //if player reached button
 
-    if (player.x_cordinate >= 780 + 20) {
+    if (player.x_cordinate >= 780 + 10 && player.y_cordinate >= 45) {
         spider.speed_y += 0.5;
-        alert(`congo!! you beat the spider`);
-        return;
-
+        button_pressed = true;
+        for (let index = 75; index < 88; index++) {
+            Drawing.tiles[index] = Drawing.tiles_for_collision_resolution[index] = 0;
+        }
     }
     //moving spider towards player
 
@@ -129,9 +149,11 @@ let drawAnimationFrame = function () {
     if (keyBoardListener.right_key_status) {
         //adding speed gradually on right side
         player.speed_x += 0.5;
+        player_animator.current_frame = (player_animator.current_frame == player_animator.right_frame1) ? player_animator.right_frame2 : player_animator.right_frame1;
     }
     if (keyBoardListener.left_key_status) {
         //adding speed gradually on left side
+        player_animator.current_frame = (player_animator.current_frame == player_animator.left_frame1) ? player_animator.left_frame2 : player_animator.left_frame1;
         player.speed_x -= 0.5;
     }
     if (keyBoardListener.up_key_status && !player.in_air) {
@@ -140,7 +162,10 @@ let drawAnimationFrame = function () {
         //setting jump height
         player.speed_y = -35;
     }
-
+    //if none of the left and right is pressed make him stand still
+    if (!keyBoardListener.left_key_status && !keyBoardListener.right_key_status) {
+        player_animator.current_frame = (player_animator.current_frame == player_animator.standing_frame1) ? player_animator.standing_frame2 : player_animator.standing_frame1;
+    }
     player.speed_y += 1;//pseudo gravity
 
 
@@ -155,11 +180,25 @@ let drawAnimationFrame = function () {
     spider.x_cordinate += spider.speed_x;
     spider.y_cordinate += spider.speed_y;
     //collision detection with floor
-    if (player.y_cordinate > frame_context.canvas.height - player.height) {
-        player.in_air = false;
+    if (player.y_cordinate > frame_context.canvas.height) {
+        player.x_cordinate = 0;
+        player.y_cordinate = 0;
+        player.old_x_cordinate = 0;
+        player.old_y_cordinate = 0;
+        player.speed_x = 0;
         player.speed_y = 0;
-        player.y_cordinate = player.old_y_cordinate = frame_context.canvas.height - player.height;
+        spider.speed_x = 0;
+        spider.speed_y = 0;
+        spider.x_cordinate = frame_context.canvas.width * 0.5;
+        spider.y_cordinate = frame_context.canvas.height * 0.35;
+        keyBoardListener.left_key_status = keyBoardListener.right_key_status = keyBoardListener.up_key_status = false;
+        alert(`:,( You fell down. Please try again!!)`);
 
+        button_pressed = false;
+        for (let index = 75; index < 88; index++) {
+            Drawing.tiles[index] = 1;
+            Drawing.tiles_for_collision_resolution[index] = 2;
+        }
     }
     //collision with top wall
     else if (player.y_cordinate < 0) {
@@ -172,24 +211,26 @@ let drawAnimationFrame = function () {
         player.x_cordinate = player.old_x_cordinate = 0;
     }
     //collision detection with right wall
-    /*else if (player.x_cordinate > frame_context.canvas.width) {
-          let identifier = { id: "1" };
-          window.history.replaceState(identifier,
-              "level2", "/level2.html");
-          window.location.reload();
-          return;
-      }*/
+    else if (player.x_cordinate > frame_context.canvas.width) {
+        let identifier = { id: "4" };
+        window.history.replaceState(identifier,
+            "end", "/end.html");
+        window.location.reload();
+        return;
+    }
 
     //resolve collision with spider
+    if (!button_pressed) {
+        resolveSpiderLeftCollision();
+        resolveSpiderRightCollision();
 
-    resolveSpiderLeftCollision();
-    resolveSpiderRightCollision();
+    }
     /*
-        Checking collision and resolving with the different tiles
-        1.check the direction of player
-        2.check collision for 2 corner points
-        3.identify tile of collision and resolve accordingly
-        */
+    Checking collision and resolving with the different tiles
+    1.check the direction of player
+    2.check collision for 2 corner points
+    3.identify tile of collision and resolve accordingly
+    */
 
     //variables required to detect and resolve collision
     let x_position, y_position, column_value, row_value, tile_value;
@@ -317,7 +358,7 @@ let drawAnimationFrame = function () {
     }
     //frame_context.fillStyle = `#008000`;
     //frame_context.fillRect(player.x_cordinate, player.y_cordinate, player.width, player.height);
-    frame_context.drawImage(player.image, 0, 0, 16, 16, Math.floor(player.x_cordinate), Math.floor(player.y_cordinate), 40, 40);
+    frame_context.drawImage(player.image, player_animator.frame_to_draw, 0, 16, 16, Math.floor(player.x_cordinate), Math.floor(player.y_cordinate), 40, 40);
     frame_context.drawImage(spider.image, 0, 0, spider.width, spider.height, Math.floor(spider.x_cordinate), Math.floor(spider.y_cordinate), spider.width, spider.height);
     window.requestAnimationFrame(drawAnimationFrame);
 }

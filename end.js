@@ -25,31 +25,12 @@ let player_animator = {
     count: 0
 }
 
-//Day count 
-let day = 0;
-//location of canvas
-let canvas_location = frame_context.canvas.getBoundingClientRect();
-//declaring sun
-let sun = {
-    radius: 30,
-    color: `#f80000`,
-    x_cordinate: 450,
-    y_cordinate: 50,
-
-    mouseListener: function (event) {
-        canvas_location = frame_context.canvas.getBoundingClientRect();
-        sun.x_cordinate = event.clientX - canvas_location.left;
-        sun.y_cordinate = event.clientY - canvas_location.top;
-    }
-}
-
-
 //set players height ,width , new and old x / y cordinate , speeds 
 let player = {
     width: 40,
     height: 40,
-    x_cordinate: 0,
-    y_cordinate: 0,
+    x_cordinate: 70,
+    y_cordinate: 70,
     speed_x: 0,
     speed_y: 0,
     in_air: false,
@@ -58,14 +39,7 @@ let player = {
 };
 // create player image
 player.image = new Image();
-console.log(player.image);
-let hint = {
-    x_cordinate: 0,
-    y_cordinate: 195,
-    image: new Image(),
-    width: 322,
-    height: 105
-}
+
 //handles status updation of different keys
 let keyBoardListener = {
     left_key_status: false,
@@ -97,36 +71,36 @@ let keyBoardListener = {
 let Drawing = {
     //for user
     tiles: [
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1,
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 1,
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1,
-        0, 1, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 1,
-        0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1,
-        0, 1, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 1,
-        0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1,
+        1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+        1, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 1, 0, 0, 1,
+        1, 0, 0, 0, 1, 1, 0, 0, 0, 1, 0, 1, 0, 0, 1,
+        1, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 1, 0, 0, 1,
+        1, 0, 0, 0, 1, 0, 1, 0, 0, 1, 0, 1, 0, 0, 1,
+        1, 1, 1, 0, 1, 0, 0, 0, 0, 1, 0, 1, 0, 0, 1,
+        1, 0, 0, 0, 1, 0, 0, 1, 0, 1, 0, 1, 0, 0, 1,
+        1, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 1, 0, 0, 1,
+        1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 1, 0, 0, 0,
         1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
 
     ],
     //for collision detection
     tiles_for_collision_resolution: [
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 2, 2, 2,
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1,
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1,
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1,
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1,
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1,
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1,
-        2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1,
+        2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
+        2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2,
+        2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2,
+        2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2,
+        2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2,
+        2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2,
+        2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2,
+        2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2,
+        2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2
 
     ],
     //tile size
     size_of_tile: 60, cols: 15, rows: 10
 }
-
+alert(`Congratulations! you saved your friend from spider! He is resting ! It's time you take rest too!!`);
 //My main function responsible for animation
 let drawAnimationFrame = function () {
     player_animator.count++;
@@ -134,19 +108,7 @@ let drawAnimationFrame = function () {
         player_animator.count = 0;
         player_animator.frame_to_draw = player_animator.current_frame;
     }
-    //Checking how many days have passed
-    if (sun.x_cordinate > 870) {
-        sun.x_cordinate = 450;
-        sun.y_cordinate = 50;
-        day++;
-        alert(`day ${day} has passed!`);
-        if (day == 3) {
-            alert(`Tiles are activated`);//55,83,111
-            Drawing.tiles_for_collision_resolution[55] = 2;
-            Drawing.tiles_for_collision_resolution[83] = 2;
-            Drawing.tiles_for_collision_resolution[111] = 2;
-        }
-    }
+
     /*
     1.Check for event listener
     2.update speed
@@ -156,7 +118,7 @@ let drawAnimationFrame = function () {
     6.resolve collision
     7.add friction to speed.;)
     */
-    console.log(`x:${sun.x_cordinate},y:${sun.y_cordinate}`);
+
     if (keyBoardListener.right_key_status) {
         //adding speed gradually on right side
         player.speed_x += 0.5;
@@ -164,8 +126,8 @@ let drawAnimationFrame = function () {
     }
     if (keyBoardListener.left_key_status) {
         //adding speed gradually on left side
-        player_animator.current_frame = (player_animator.current_frame == player_animator.left_frame1) ? player_animator.left_frame2 : player_animator.left_frame1;
         player.speed_x -= 0.5;
+        player_animator.current_frame = (player_animator.current_frame == player_animator.left_frame1) ? player_animator.left_frame2 : player_animator.left_frame1;
     }
     if (keyBoardListener.up_key_status && !player.in_air) {
         //jumping when on the ground
@@ -187,22 +149,6 @@ let drawAnimationFrame = function () {
     player.x_cordinate += player.speed_x;
     player.y_cordinate += player.speed_y;
 
-    //collision of sun with top
-    if (sun.y_cordinate < sun.radius) {
-        sun.y_cordinate = sun.radius;
-    }
-    //collision of sun with left wall
-    if (sun.x_cordinate < sun.radius) {
-        sun.x_cordinate = sun.radius;
-    }
-    //collision of sun with right wall
-    if (sun.x_cordinate > frame_context.canvas.width - sun.radius) {
-        sun.x_cordinate = frame_context.canvas.width - sun.radius;
-    }
-    //collision with floor
-    if (sun.y_cordinate > frame_context.canvas.height - sun.radius - Drawing.size_of_tile) {
-        sun.y_cordinate = frame_context.canvas.height - sun.radius - Drawing.size_of_tile;
-    }
     //collision detection with floor
     if (player.y_cordinate > frame_context.canvas.height - player.height) {
         player.in_air = false;
@@ -222,10 +168,7 @@ let drawAnimationFrame = function () {
     }
     //collision detection with right wall
     else if (player.x_cordinate > frame_context.canvas.width) {
-        let identifier = { id: "2" };
-        window.history.replaceState(identifier,
-            "level3", "/A-Button/level3.html");
-        window.location.reload();
+        alert(`Good Bye!!`);
         return;
     }
 
@@ -355,29 +298,23 @@ let drawAnimationFrame = function () {
     player.speed_y *= 0.9;
     //drawing tiles to the canvas from tiles array
     for (let index = 0; index < Drawing.tiles.length; index++) {
-        frame_context.fillStyle = (Drawing.tiles[index] == 1) ? `#000000` : `#ffffff`;//setting color of tile
+        frame_context.fillStyle = (Drawing.tiles[index] == 1) ? `#ffffff` : `#000000`;//setting color of tile
         frame_context.fillRect((index % Drawing.cols) * Drawing.size_of_tile, Math.floor(index / Drawing.cols) * Drawing.size_of_tile, Drawing.size_of_tile, Drawing.size_of_tile);
     }
-    frame_context.beginPath();
-    frame_context.fillStyle = sun.color;
-    frame_context.arc(sun.x_cordinate, sun.y_cordinate, sun.radius, 0, Math.PI * 2);
-    frame_context.fill();
+    //frame_context.fillStyle = `#008000`;
+    //frame_context.fillRect(player.x_cordinate, player.y_cordinate, player.width, player.height);
     frame_context.drawImage(player.image, player_animator.frame_to_draw, 0, 16, 16, Math.floor(player.x_cordinate), Math.floor(player.y_cordinate), 40, 40);
-    frame_context.drawImage(hint.image, 0, 0, hint.width, hint.height, Math.floor(hint.x_cordinate), Math.floor(hint.y_cordinate), hint.width, hint.height);
+    //frame_context.drawImage(key.image, 0, 0, key.width, key.height, key.x_cordinate, key.y_cordinate, key.width, key.height);
     window.requestAnimationFrame(drawAnimationFrame);
 }
 //window.requestAnimationFrame(drawAnimationFrame);
 window.addEventListener(`keydown`, keyBoardListener.updateKeyStatus);
 window.addEventListener(`keyup`, keyBoardListener.updateKeyStatus);
-window.addEventListener(`mousedown`, sun.mouseListener)
-player.image.addEventListener(`load`, function (event) {
-});
+
 player.image.addEventListener(`load`, function (event) {
     window.requestAnimationFrame(drawAnimationFrame);
 });
-
 player.image.src = `./animation.png`;
-hint.image.src = `./hint.png`;
 
 //function for assigning different collision technique
 function resolveCollision(tile_value, row, column) {
@@ -443,8 +380,6 @@ function resolveLeftCollision(row, column) {//to collide at left with tile ,play
             player.x_cordinate = player.old_x_cordinate = x_value_of_tile_left - player.width - 0.01;
             return true;
         }
-
-
     }
     return false;
 }
