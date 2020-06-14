@@ -214,7 +214,7 @@ let drawAnimationFrame = function () {
     else if (player.x_cordinate > frame_context.canvas.width) {
         let identifier = { id: "4" };
         window.history.replaceState(identifier,
-            "A-Button/end", "/A-Button/end.html");
+            "end", "/A-Button/end.html");
         window.location.reload();
         return;
     }
@@ -251,7 +251,7 @@ let drawAnimationFrame = function () {
 
         //check for bottom right corner
         x_position = player.x_cordinate + player.width;
-        y_position = player.y_position + player.height;
+        y_position = player.y_cordinate + player.height;
 
         //.mapping cordinates to 2d grid
         column_value = Math.floor(x_position / Drawing.size_of_tile);
@@ -281,7 +281,7 @@ let drawAnimationFrame = function () {
         //check for bottom left corner
         //get the x and y co-ordinates
         x_position = player.x_cordinate;
-        y_position = player.y_position + player.height;
+        y_position = player.y_cordinate + player.height;
         // convert them to grid format
         column_value = Math.floor(x_position / Drawing.size_of_tile);
         row_value = Math.floor(y_position / Drawing.size_of_tile);
@@ -308,7 +308,7 @@ let drawAnimationFrame = function () {
         //check for top right corner
         //finding x and y co-ordinates for top-right
         x_position = player.x_cordinate + player.width;
-        y_position = player.y_position;
+        y_position = player.y_cordinate;
         //converting to 2D grid
         column_value = Math.floor(x_position / Drawing.size_of_tile);
         row_value = Math.floor(y_position / Drawing.size_of_tile);
@@ -336,7 +336,7 @@ let drawAnimationFrame = function () {
         //check for bottom right corner
         //getting co -ordinates for bottom - right corner
         x_position = player.x_cordinate + player.width;
-        y_position = player.y_position + player.height;
+        y_position = player.y_cordinate + player.height;
         //converting them to 2D grid 
         column_value = Math.floor(x_position / Drawing.size_of_tile);
         row_value = Math.floor(y_position / Drawing.size_of_tile);
